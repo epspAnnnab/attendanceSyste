@@ -42,7 +42,7 @@ def markAttendance(name,img):
           
            
 
-saveEncoding()
+#saveEncoding()
 
 with open('encodeFile1.dat','rb') as f:
     all_face_encoding =pickle.load(f)
@@ -67,8 +67,9 @@ while True:
         matches =face_recognition.compare_faces(encodeListKnown,encodeFace)
         faceDis = face_recognition.face_distance(encodeListKnown,encodeFace)
         matchIndex =np.argmin(faceDis)
+        print(faceDis[matchIndex])
 
-        if matches[matchIndex]:
+        if faceDis[matchIndex] < 0.39:
             name = classNames[matchIndex].upper()
             y1,x2,y2,x1=faceloc
             y1,x2,y2,x1 = y1*4,x2*4,y2*4,x1*4
@@ -85,6 +86,9 @@ while True:
             cv2.putText(img,'inconnu',(x1+6,y2-6),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255))
 
 
-    cv2.imshow('webcam',img)
-    cv2.waitKey(1)
+    #cv2.imshow('webcam',img)
+    # cv2.namedWindow("foo", cv2.WINDOW_NORMAL)
+    # cv2.setWindowProperty("foo", cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_AUTOSIZE)
+    cv2.imshow("foo", img)
+    cv2.waitKey(200)
 
