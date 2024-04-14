@@ -4,7 +4,9 @@ import face_recognition
 import os
 from datetime import datetime
 import pickle
-import asyncio
+import pyttsx3
+from playsound import playsound
+
 path ='ImagesModels'
 classNames = []
 encodeList = []
@@ -12,6 +14,9 @@ encode = {}
 myList = os.listdir(path)
 print(myList)
 print(classNames)
+
+#engine = pyttsx3.init()
+
 
 
 def saveEncoding():
@@ -39,10 +44,13 @@ def markAttendance(name,img):
             dtString = now.strftime('%H:%M:%S')
             f.writelines(f'\n{name},{dtString}')
             cv2.imwrite('ImageSaved/'+name+'.jpg', img)
+            playsound('pip.wav')
+            #engine.say(name+" OK")
+           # engine.runAndWait()
           
            
 
-#saveEncoding()
+#saveEncoding()c
 
 with open('encodeFile1.dat','rb') as f:
     all_face_encoding =pickle.load(f)
@@ -57,7 +65,7 @@ cap = cv2.VideoCapture(0)
 
 while True:
     success , img = cap.read()
-    imgs = cv2.resize(img,(0,0),None,0.25,0.25)
+    imgs = cv2.resize(img,(0,0),None,0.5,0.5)
     imgs = cv2.cvtColor(imgs,cv2.COLOR_BGR2RGB)
 
     faceCurFrame = face_recognition.face_locations(imgs)
@@ -72,10 +80,11 @@ while True:
         if faceDis[matchIndex] < 0.39:
             name = classNames[matchIndex].upper()
             y1,x2,y2,x1=faceloc
-            y1,x2,y2,x1 = y1*4,x2*4,y2*4,x1*4
+            y1,x2,y2,x1 = y1*2,x2*2,y2*2,x1*2
             cv2.rectangle(img,(x1,y1),(x2,y2),(0,255,0),2)
             cv2.rectangle(img,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
-            cv2.putText(img,name,(x1+6,y2-6),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255))
+            cv2.putText(img,name,(x1+6,y2-6),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,0))
+            cv2.putText(img,'EPSP ANNABA V 1.1',(0,30),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,0),2)
             
             markAttendance(name.upper(),img)
         else:
